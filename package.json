@@ -1,0 +1,10 @@
+{
+  "name": "symlix-web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "parcel": "^2.6.2"
+  }
+}
