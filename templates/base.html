@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr-FR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Symlix Streams</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto"
+        integrity="sha512-EEMyNUsXngdZZ9zW347rbOS65LSPOmgb7riIwX/7SRc3nk91UufzZsnLZl7IELOlnqv3NxyLIgPOhp43VPi35Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/brands.min.css"
+        integrity="sha512-nS1/hdh2b0U8SeA8tlo7QblY6rY6C+MgkZIeRzJQQvMsFfMQFUKp+cgMN2Uuy+OtbQ4RoLMIlO2iF7bIEY3Oyg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/main.css" />
+</head>
+
+<body>
+    <div class="bg-cont">
+        <div class="bg-layer-front"></div>
+        <div class="bg-layer-back"></div>
+    </div>
+
+    <div class="container">
+        <a href="/"><img class="title-img" src="/assets/symlix.svg"></a>
+    </div>
+
+    <div class="container">
+        <div class="icon-bar">
+            <a href="https://www.twitch.tv/Symlix" class="icon fa-brands fa-twitch"></a>
+            <a href="https://www.youtube.com/channel/UCXQCsp6auM2_UsNhab_lvQA" class="icon fa-brands fa-youtube"></a>
+            <a href="https://twitter.com/SymlixLive" class="icon fa-brands fa-twitter"></a>
+        </div>
+    </div>
+
+    <div class="container">
+        {% block content %}{% endblock content %}
+    </div>
+
+    <div class="container footer">
+        <a href="/contact">Contact</a> · <a href="https://github.com/Moxinilian/symlix-web">Source</a>
+    </div>
+
+    <script src="/js/main.js"></script>
+    {{ dev | safe }}
+</body>
+
+</html>
