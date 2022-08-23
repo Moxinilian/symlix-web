@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Symlix - Musiques{% if page != 1 %} page {{ page }}{% endif %}{% endblock title %}
+{% block og_title %}Musiques{% endblock og_title %}
+
+{% block head %}
+<link rel="stylesheet" href="/css/music.css" />
+{% endblock head %}
+
+{% block content %}
+<div class="container">
+    <h1>Musique des streams</h1>
+
+    <ul class="streams">
+        {% for stream in streams %}
+        <li>
+            <b>Stream du {{ stream.timestamp | date(timezone="Europe/Paris", format="%d/%m/%Y à %Hh%M") }}</b>
+            {% if stream.intro_music | length != 0 %}
+            <div>
+                Musiques utilisées:
+                <ul>
+                {% for music_id in stream.intro_music %}
+                    <li>
+                        {% if music[music_id].url %}<a href="{{ music[music_id].url }}">{% endif %}
+                        {{ music[music_id].author }} - {{ music[music_id].name }}
+                        {% if music[music_id].url %}</a>{% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="music-nav">
+        <div>
+        {% if not is_first_page %}
+            <a href="/music/{{ page - 1 }}">Plus récents</a>
+        {% endif %}
+        </div>
+        <div>
+        {% if not is_last_page %}
+            <a href="/music/{{ page + 1 }}">Plus anciens</a>
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="/js/contact.js"></script>
+{% endblock scripts %}

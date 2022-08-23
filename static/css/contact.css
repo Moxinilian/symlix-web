@@ -1,0 +1,20 @@
+.contact-list li {
+    margin-bottom: 0.75rem;
+}
+
+.contact-list li::marker {
+    content: "▸";
+}
+
+.contact-list .open::marker {
+    content: "▾";
+}
+
+.toggler {
+    cursor: pointer;
+}
+
+.shifted {
+    margin-left: 1rem;
+    margin-right: 3rem;
+}

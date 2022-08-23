@@ -1,0 +1,13 @@
+.streams {
+    line-height: 1.5rem;
+}
+
+.streams > li {
+    margin-bottom: 2rem;
+}
+
+.music-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}

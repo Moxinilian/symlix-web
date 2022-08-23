@@ -1,14 +1,28 @@
-use std::{fs::File, os::unix::prelude::FileExt, path::PathBuf, time::Instant};
+use std::{fs::File, path::PathBuf, time::Instant};
 
 use anyhow::{anyhow, Context, Result};
 use clap::Parser;
+use data::{MusicDB, StreamDB};
+use music::generate_music_pages;
+use pages::generate_custom_pages;
+use serde::Deserialize;
 use serve::get_dev_html_insert;
 use walkdir::WalkDir;
 
 mod data;
+mod music;
+mod pages;
 
 #[cfg(feature = "dev")]
 mod serve;
+
+#[derive(Deserialize)]
+struct Config {
+    twitch: String,
+    youtube: String,
+    twitter: String,
+    discord: String,
+}
 
 /// Basic static site generator
 #[derive(Parser, Debug)]
@@ -30,36 +44,53 @@ pub struct Args {
     #[clap(short, long, value_parser, default_value = "dist")]
     output: PathBuf,
 
+    #[clap(short, long, value_parser, default_value = "config.toml")]
+    /// Config file
+    config: PathBuf,
+
     /// Serve and regenerate the website upon file changes
     #[cfg(feature = "dev")]
     #[clap(short, long)]
     serve: bool,
 
-    /// Server port
+    /// Server address
     #[cfg(feature = "dev")]
-    #[clap(short, long, value_parser, default_value_t = 8080)]
-    port: u16,
+    #[clap(short, long, value_parser, default_value = "127.0.0.1:8080")]
+    addr: String,
 
     /// Hot reloading server port
     #[cfg(feature = "dev")]
-    #[clap(short, long, value_parser, default_value_t = 9595)]
-    hrs_port: u16,
+    #[clap(short, long, value_parser, default_value = "127.0.0.1:9595")]
+    hrs_addr: String,
+
+    /// Allow caching
+    #[cfg(feature = "dev")]
+    #[clap(long, value_parser)]
+    allow_caching: bool,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let args = Args::parse();
 
     if let Err(e) = generate(&args) {
-        eprintln!("\x1b[31m[ERROR] {}\x1b[0m", e);
+        eprintln!("\x1b[31m[ERROR] {:#}\x1b[0m", e);
     }
 
     #[cfg(feature = "dev")]
     if args.serve {
-        serve::serve(args);
+        serve::serve(args)?;
     }
+
+    Ok(())
 }
 
 pub fn generate(args: &Args) -> Result<()> {
+    let config: Config = toml::from_str(
+        &std::fs::read_to_string(&args.config)
+            .context("failed to read config file")
+            .context("failed to deserialize config file")?,
+    )?;
+
     let start = Instant::now();
     if args.output.exists() {
         if args.output.is_dir() {
@@ -137,6 +168,7 @@ pub fn generate(args: &Args) -> Result<()> {
 
     let mut templates = tera::Tera::default();
 
+    let mut templates_to_load = Vec::new();
     for p in WalkDir::new(&args.templates) {
         let p = p.context("failed to find template file")?;
         if !p
@@ -144,22 +176,29 @@ pub fn generate(args: &Args) -> Result<()> {
             .context("failed to find template metadata")?
             .is_dir()
         {
-            templates
-                .add_template_file(
-                    p.path(),
-                    Some(
-                        &p.path()
-                            .strip_prefix(&args.templates)
-                            .expect("unreachable: walkdir preserves root")
-                            .to_string_lossy(),
-                    ),
-                )
-                .context("failed to open template")?;
+            templates_to_load.push((
+                p.path().to_owned(),
+                Some(
+                    p.path()
+                        .strip_prefix(&args.templates)
+                        .expect("unreachable: walkdir preserves root")
+                        .to_string_lossy()
+                        .to_string(),
+                ),
+            ));
         }
     }
 
+    templates
+        .add_template_files(templates_to_load)
+        .context("failed to load templates")?;
+
     let mut ctx = tera::Context::new();
 
+    ctx.insert("twitch", &config.twitch);
+    ctx.insert("youtube", &config.youtube);
+    ctx.insert("discord", &config.discord);
+    ctx.insert("twitter", &config.twitter);
     ctx.insert("dev", "");
 
     #[cfg(feature = "dev")]
@@ -167,10 +206,27 @@ pub fn generate(args: &Args) -> Result<()> {
         ctx.insert("dev", &get_dev_html_insert(args)?);
     }
 
+    let streams: StreamDB = ron::de::from_reader(
+        &File::open(&args.data.join("streams.ron")).context("failed to open stream database")?,
+    )
+    .context("failed to load stream database")?;
+
+    let music: MusicDB = ron::de::from_reader(
+        &File::open(&args.data.join("music.ron")).context("failed to open music database")?,
+    )
+    .context("failed to load music database")?;
+
+    ctx.insert("stream_amount", &streams.len());
+    ctx.insert("music_amount", &music.len());
+
     let rendered = templates.render("base.html", &ctx)?;
 
     let minified = minify_html::minify(rendered.as_bytes(), &minify_html::Cfg::spec_compliant());
-    std::fs::write(&args.output.join("index.html"), minified)?;
+    std::fs::write(&args.output.join("index.html"), minified)
+        .context("failed to write index template result")?;
+
+    generate_custom_pages(args, &templates, &ctx)?;
+    generate_music_pages(args, &templates, &ctx, &streams, &music)?;
 
     let elapsed = start.elapsed();
 

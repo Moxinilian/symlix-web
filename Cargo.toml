@@ -8,14 +8,17 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tera = "1.17.0"
+tera = { version = "1.17.0", features = ["builtins"] }
 walkdir = "2.3.2"
 clap = { version = "3.2.17", features = ["derive"] }
-rustbreak = { version = "2.0.0", features = ["ron_enc"] }
+ron = "0.8.0"
 minify-html = "0.9.2"
 css-minify = "0.2.2"
 minify-js = "0.1.5"
 anyhow = "1.0.62"
+serde = { version = "1.0.144", features = ["derive"] }
+toml = "0.5.9"
+itertools = "0.10.3"
 
 # For hot reloading and serving
 notify = { version = "4.0.17", optional = true }

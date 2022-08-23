@@ -1,25 +1,30 @@
 use std::collections::HashMap;
 
+use serde::{Deserialize, Serialize};
+
 pub type MusicKey = String;
 pub type PlaylistKey = String;
 
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Stream {
-    name: String,
     timestamp: u64,
     vods: Vec<Vod>,
-    intro_musics: Vec<MusicKey>,
+    intro_music: Vec<MusicKey>,
     background_playlists: Vec<PlaylistKey>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Vod {
     url: String,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Playlist {
     musics: Vec<MusicKey>,
     url: Option<String>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Music {
     name: String,
     author: String,
@@ -27,5 +32,4 @@ pub struct Music {
 }
 
 pub type MusicDB = HashMap<MusicKey, Music>;
-pub type PlaylistDB = HashMap<PlaylistKey, Playlist>;
 pub type StreamDB = Vec<Stream>;

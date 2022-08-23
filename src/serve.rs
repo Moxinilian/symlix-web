@@ -1,6 +1,6 @@
-use std::{net::SocketAddr, path::PathBuf, time::Duration};
+use std::{net::ToSocketAddrs, path::PathBuf, time::Duration};
 
-use anyhow::Result;
+use anyhow::{anyhow, Context, Result};
 use axum::{
     http::{HeaderValue, StatusCode},
     response::IntoResponse,
@@ -20,7 +20,12 @@ pub struct FileServer {
 }
 
 impl FileServer {
-    pub fn new(serve_port: u16, serve_folder: PathBuf, hot_reload_port: u16) -> Self {
+    pub fn new(
+        serve_addr: &str,
+        serve_folder: PathBuf,
+        hot_reload_addr: &str,
+        allow_caching: bool,
+    ) -> Result<Self> {
         let tokio_runtime = Runtime::new().expect("failed to create tokio runtime");
 
         let g = tokio_runtime.enter();
@@ -32,22 +37,29 @@ impl FileServer {
         let app = Router::new().fallback(
             axum::routing::get_service(ServeDir::new(serve_folder))
                 .handle_error(handle_error)
-                .map_response(|mut res| {
-                    let headers = res.headers_mut();
-                    headers.append(
-                        "cache-control",
-                        HeaderValue::from_static("no-cache, no-store, must-revalidate"),
-                    );
-                    headers.append("pragma", HeaderValue::from_static("no-cache"));
-                    headers.append("expires", HeaderValue::from_static("0"));
+                .map_response(move |mut res| {
+                    if !allow_caching {
+                        let headers = res.headers_mut();
+                        headers.append(
+                            "cache-control",
+                            HeaderValue::from_static("no-cache, no-store, must-revalidate"),
+                        );
+                        headers.append("pragma", HeaderValue::from_static("no-cache"));
+                        headers.append("expires", HeaderValue::from_static("0"));
+                    }
 
                     res
                 }),
         );
 
         tokio_runtime.spawn(
-            axum::Server::bind(&SocketAddr::from(([127, 0, 0, 1], serve_port)))
-                .serve(app.into_make_service()),
+            axum::Server::bind(
+                &serve_addr
+                    .to_socket_addrs()?
+                    .next()
+                    .ok_or_else(|| anyhow!("invalid server address"))?,
+            )
+            .serve(app.into_make_service()),
         );
 
         std::mem::drop(g);
@@ -56,18 +68,22 @@ impl FileServer {
             .expect("failed to build websocket");
         let hot_reload_sender = hot_reload_server.broadcaster();
 
+        let hot_reload_socket = hot_reload_addr
+            .to_socket_addrs()?
+            .next()
+            .ok_or_else(|| anyhow!("invalid hot reloading server address"))?;
         std::thread::spawn(move || {
             hot_reload_server
-                .listen(SocketAddr::from(([127, 0, 0, 1], hot_reload_port)))
+                .listen(&hot_reload_socket)
                 .expect("failed to listen to websocket");
         });
 
-        println!("[INFO] Server opened at http://localhost:{}/", serve_port);
+        println!("[INFO] Server opened at http://{}/", serve_addr);
 
-        Self {
+        Ok(Self {
             hot_reload_sender,
             _tokio_runtime: tokio_runtime,
-        }
+        })
     }
 
     pub fn reload(&self) {
@@ -88,7 +104,7 @@ pub fn get_dev_html_insert(args: &Args) -> Result<String> {
         .expect("bug: failed to load hot reloading snippet template");
 
     let mut ctx = tera::Context::new();
-    ctx.insert("port", &args.hrs_port);
+    ctx.insert("addr", &args.hrs_addr);
 
     let mut rendered = Vec::with_capacity(template.len());
     tera.render_to("hot_reload_snippet", &ctx, &mut rendered)?;
@@ -101,7 +117,7 @@ pub fn get_dev_html_insert(args: &Args) -> Result<String> {
     Ok(String::from_utf8(out)?)
 }
 
-pub fn serve(args: Args) {
+pub fn serve(args: Args) -> Result<()> {
     let (tx, rx) = std::sync::mpsc::channel();
     let mut watcher = notify::watcher(tx, Duration::from_secs(1)).unwrap();
 
@@ -115,7 +131,13 @@ pub fn serve(args: Args) {
 
     watcher.watch(&args.data, RecursiveMode::Recursive).unwrap();
 
-    let remote = FileServer::new(args.port, args.output.clone(), args.hrs_port);
+    let remote = FileServer::new(
+        &args.addr,
+        args.output.clone(),
+        &args.hrs_addr,
+        args.allow_caching,
+    )
+    .context("failed to start development server")?;
 
     loop {
         match rx.recv() {
@@ -126,7 +148,7 @@ pub fn serve(args: Args) {
                 | DebouncedEvent::Remove(_),
             ) => {
                 if let Err(e) = generate(&args) {
-                    eprintln!("\x1b[31m[ERROR] {}\x1b[0m", e);
+                    eprintln!("\x1b[31m[ERROR] {:#}\x1b[0m", e);
                 } else {
                     remote.reload();
                 }

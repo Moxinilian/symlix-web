@@ -1,6 +1,7 @@
 (function () {
     const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
+    let toPress = 0;
     function codeHandler(e) {
         if (e.key === code[toPress]) {
             toPress++;
@@ -13,6 +14,5 @@
         }
     }
 
-    let toPress = 0;
     window.addEventListener('keydown', codeHandler);
 })();
