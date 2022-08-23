@@ -1,6 +1,6 @@
 # symlix-web
 
-Static site generator for [symlix.fr](https://www.symlix.fr)
+Static site generator for [symlix.fr](https://symlix.fr)
 
 This repository is public but I did not make it with any other use case than mine in mind. It is mostly here for when you feel bored and want to help out with a few things or play with the data yourself.
 
