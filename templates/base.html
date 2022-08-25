@@ -8,13 +8,13 @@
 
     <meta property="og:title" content="{% block og_title %}Symlix{% endblock og_title %}" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://symlix.fr/" />
+    <meta property="og:url" content="{{ url }}" />
     <meta property="og:image" content="https://symlix.fr/assets/symlix_logo.png" />
     <meta property="og:image:alt" content="Symlix" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="Symlix" />
 
-
+    <link rel="canonical" href="{{ url }}" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
         integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="

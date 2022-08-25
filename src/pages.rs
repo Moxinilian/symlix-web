@@ -6,7 +6,12 @@ use walkdir::WalkDir;
 
 use crate::Args;
 
-pub fn generate_custom_pages(args: &Args, templates: &Tera, ctx: &tera::Context) -> Result<()> {
+pub fn generate_custom_pages(
+    base_url: &str,
+    args: &Args,
+    templates: &Tera,
+    mut ctx: tera::Context,
+) -> Result<()> {
     let empty_path = PathBuf::default();
 
     for page in WalkDir::new(args.templates.join("pages"))
@@ -40,12 +45,14 @@ pub fn generate_custom_pages(args: &Args, templates: &Tera, ctx: &tera::Context)
                 .context("failed to create page output folder")?;
             let index = output_folder.join("index.html");
 
+            ctx.insert("url", &[base_url, "/", &output_folder.to_string_lossy()].concat());
             let rendered = templates.render(
                 template_path
                     .to_str()
                     .ok_or_else(|| anyhow!("template file path is not valid UTF-8"))?,
-                ctx,
+                &ctx,
             )?;
+            ctx.remove("url");
 
             let minified =
                 minify_html::minify(rendered.as_bytes(), &minify_html::Cfg::spec_compliant());

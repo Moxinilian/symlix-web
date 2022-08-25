@@ -2,3 +2,5 @@ twitch = "https://www.twitch.tv/Symlix"
 youtube = "https://www.youtube.com/channel/UCXQCsp6auM2_UsNhab_lvQA"
 discord = "https://discord.gg/B3rhhWnfBm"
 twitter = "https://twitter.com/SymlixLive"
+
+base_url = "https://symlix.fr"

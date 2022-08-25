@@ -22,6 +22,7 @@ struct Config {
     youtube: String,
     twitter: String,
     discord: String,
+    base_url: String,
 }
 
 /// Basic static site generator
@@ -219,14 +220,16 @@ pub fn generate(args: &Args) -> Result<()> {
     ctx.insert("stream_amount", &streams.len());
     ctx.insert("music_amount", &music.len());
 
+    ctx.insert("url", &config.base_url);
     let rendered = templates.render("base.html", &ctx)?;
+    ctx.remove("url");
 
     let minified = minify_html::minify(rendered.as_bytes(), &minify_html::Cfg::spec_compliant());
     std::fs::write(&args.output.join("index.html"), minified)
         .context("failed to write index template result")?;
 
-    generate_custom_pages(args, &templates, &ctx)?;
-    generate_music_pages(args, &templates, &ctx, &streams, &music)?;
+    generate_custom_pages(&config.base_url, args, &templates, ctx.clone())?;
+    generate_music_pages(&config.base_url, args, &templates, &ctx, &streams, &music)?;
 
     let elapsed = start.elapsed();
 

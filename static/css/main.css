@@ -18,6 +18,10 @@ p {
     margin-bottom: 0;
 }
 
+html {
+    padding-left: calc(100vw - 100%);
+}
+
 body {
     background: rgb(140, 192, 222);
     font-family: 'Poppins', sans-serif;
@@ -46,6 +50,8 @@ body {
     image-rendering: pixelated;
     height: 200%;
     width: 200%;
+    padding-left: calc((100vw - 100%) * 2);
+
 }
 
 .bg-layer-back {

@@ -10,6 +10,7 @@ use crate::{
 const STREAMS_PER_PAGE: usize = 8;
 
 pub fn generate_music_pages(
+    base_url: &str,
     args: &Args,
     templates: &Tera,
     ctx: &tera::Context,
@@ -41,6 +42,11 @@ pub fn generate_music_pages(
 
         ctx.insert("is_first_page", &(page == 1));
         ctx.insert("is_last_page", &(page == pages_to_generate.len()));
+        ctx.insert("url", &if page == 1 {
+            [base_url, "/", &music_dir.to_string_lossy()].concat()
+        } else {
+            [base_url, "/", &page_directory.to_string_lossy()].concat()
+        });
 
         let rendered = templates.render("music.html", &ctx)?;
 
