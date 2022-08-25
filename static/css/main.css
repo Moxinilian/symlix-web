@@ -19,6 +19,7 @@ p {
 }
 
 html {
+    /* Compensates vertical scrollbar size */
     padding-left: calc(100vw - 100%);
 }
 
@@ -50,8 +51,9 @@ body {
     image-rendering: pixelated;
     height: 200%;
     width: 200%;
+    
+    /* Compensates vertical scrollbar size */
     padding-left: calc((100vw - 100%) * 2);
-
 }
 
 .bg-layer-back {
