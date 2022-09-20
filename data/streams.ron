@@ -1,1 +1,20 @@
-[]
+[
+    Stream (
+        timestamp: 1663007400,
+        vods: [Vod(url: "https://www.youtube.com/watch?v=soNHtrj6pg8")],
+        intro_music: ["harkiadel_feel_it", "harkiadel_color_blind", "harkiadel_march_of_joy"],
+        background_playlists: ["background_small"],
+    ),
+    Stream (
+        timestamp: 1663180200,
+        vods: [Vod(url: "https://www.youtube.com/watch?v=vjjg8wWJins")],
+        intro_music: ["harkiadel_feel_it", "harkiadel_color_blind", "harkiadel_march_of_joy"],
+        background_playlists: ["background_small"],
+    ),
+    Stream (
+        timestamp: 1663439400,
+        vods: [Vod(url: "https://www.youtube.com/watch?v=kRHqOhXWBdI")],
+        intro_music: ["harkiadel_drifting_away"],
+        background_playlists: ["background_small"],
+    ),
+]

@@ -1,1 +1,127 @@
-{}
+{
+    "harkiadel_march_of_joy": (
+        title: "March of Joy",
+        author: "Harkiadel",
+        url: Some("https://soundcloud.com/king-harkinian-809715880/march-of-joy"),
+    ),
+    "harkiadel_color_blind": (
+        title: "Color-blind",
+        author: "Harkiadel",
+        url: Some("https://soundcloud.com/king-harkinian-809715880/color-blind"),
+    ),
+    "harkiadel_feel_it": (
+        title: "Feel It!",
+        author: "Harkiadel",
+        url: Some("https://soundcloud.com/king-harkinian-809715880/feel-it"),
+    ),
+    "meganeko_sharkatzor": (
+        title: "Sharkatzor",
+        author: "meganeko",
+        url: Some("https://soundcloud.com/meganeko/meganeko-sharkatzor"),
+    ),
+    "meganeko_violent_purple": (
+        title: "Violent Purple",
+        author: "meganeko",
+        url: Some("https://soundcloud.com/meganeko/violent-purple"),
+    ),
+    "lincke_gaelic_conclusion": (
+        title: "Gaelic Conclusion",
+        author: "Jacob Lincke",
+        url: Some("https://soundcloud.com/jacoblincke/gaelic-conclusion"),
+    ),
+    "pdm_great_canyon": (
+        title: "Great Canyon",
+        author: "Arata Iiyoshi",
+        url: None,
+    ),
+    "pdm2_temporal_tower": (
+        title: "Temporal Tower",
+        author: "Arata Iiyoshi",
+        url: None,
+    ),
+    "layton6_airship_chase": (
+        title: "Airship Chase",
+        author: "Tomohito Nishiura",
+        url: None,
+    ),
+    "dkctf_seashore_war": (
+        title: "Seashore War",
+        author: "David Wise",
+        url: None,
+    ),
+    "pdm2_sea_of_time": (
+        title: "Through the Sea of Time",
+        author: "Arata Iiyoshi",
+        url: None,
+    ),
+    "botw_gerudo": (
+        title: "Gerudo Town",
+        author: "Yasuaki Iwata",
+        url: None,
+    ),
+    "pdms_lush_forest": (
+        title: "Lush Forest",
+        author: "Pokémon Super Mystery Dungeon",
+        url: None,
+    ),
+    "pdm_sky_tower": (
+        title: "Sky Tower",
+        author: "Arata Iiyoshi",
+        url: None,
+    ),
+    "sm64_dire_docks": (
+        title: "Dire Dire Docks",
+        author: "Koji Kondo",
+        url: None,
+    ),
+    "corridors_of_time": (
+        title: "Corridors of Time",
+        author: "Yasunori Mitsuda",
+        url: None,
+    ),
+    "stickerbrush": (
+        title: "Stickerbrush Symphony",
+        author: "David Wise",
+        url: None,
+    ),
+    "pkmbw_route_10": (
+        title: "Route 10",
+        author: "Shota Kageyama",
+        url: None,
+    ),
+    "feint_freefall": (
+        title: "Freefall",
+        author: "Feint",
+        url: Some("https://www.youtube.com/watch?v=GM134Tu3IyI"),
+    ),
+    "spirit_tracks_fields": (
+        title: "In the Fields",
+        author: "Manaka Tominaga",
+        url: None,
+    ),
+    "new_donk_city": (
+        title: "New Donk City",
+        author: "Naoto Kubo",
+        url: None,
+    ),
+    "kirbydl3_ripple_field_3": (
+        title: "Ripple Field 3",
+        author: "Jun Ishikawa",
+        url: None,
+    ),
+    "kirbydl3_sand_canyon_1": (
+        title: "Sand Canyon 1",
+        author: "Jun Ishikawa",
+        url: None,
+    ),
+    "buoy_base_galaxy": (
+        title: "Buoy Base Galaxy",
+        author: "Mahito Yokota",
+        url: None,
+    ),
+    "harkiadel_drifting_away": (
+        title: "Drifting Away (Harkiadel Remix)",
+        author: "Ryoji Yoshitomi",
+        url: Some("https://soundcloud.com/king-harkinian-809715880/ryoji-yoshitomi-drifting-away-trance-remix"),
+    ),
+}

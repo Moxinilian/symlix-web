@@ -22,7 +22,7 @@
                 {% for music_id in stream.intro_music %}
                     <li>
                         {% if music[music_id].url %}<a href="{{ music[music_id].url }}">{% endif %}
-                        {{ music[music_id].author }} - {{ music[music_id].name }}
+                        {{ music[music_id].author }} - {{ music[music_id].title }}
                         {% if music[music_id].url %}</a>{% endif %}
                     </li>
                 {% endfor %}

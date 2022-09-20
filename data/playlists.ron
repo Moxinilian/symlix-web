@@ -1,0 +1,6 @@
+{
+    "background_small": Playlist(
+        music: ["pdm_great_canyon", "pdm2_temporal_tower", "layton6_airship_chase"],
+        url: None,
+    ),
+}

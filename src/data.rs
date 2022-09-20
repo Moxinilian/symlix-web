@@ -20,13 +20,13 @@ pub struct Vod {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Playlist {
-    musics: Vec<MusicKey>,
+    music: Vec<MusicKey>,
     url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Music {
-    name: String,
+    title: String,
     author: String,
     url: Option<String>,
 }
