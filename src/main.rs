@@ -6,7 +6,6 @@ use data::{MusicDB, StreamDB};
 use music::generate_music_pages;
 use pages::generate_custom_pages;
 use serde::Deserialize;
-use serve::get_dev_html_insert;
 use walkdir::WalkDir;
 
 mod data;
@@ -59,7 +58,7 @@ pub struct Args {
     #[clap(short, long, value_parser, default_value = "127.0.0.1:8080")]
     addr: String,
 
-    /// Hot reloading server port
+    /// Hot reloading server address
     #[cfg(feature = "dev")]
     #[clap(short, long, value_parser, default_value = "127.0.0.1:9595")]
     hrs_addr: String,
@@ -204,7 +203,7 @@ pub fn generate(args: &Args) -> Result<()> {
 
     #[cfg(feature = "dev")]
     if args.serve {
-        ctx.insert("dev", &get_dev_html_insert(args)?);
+        ctx.insert("dev", &serve::get_dev_html_insert(args)?);
     }
 
     let streams: StreamDB = ron::de::from_reader(
