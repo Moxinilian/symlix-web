@@ -19,7 +19,6 @@ mod serve;
 struct Config {
     twitch: String,
     youtube: String,
-    twitter: String,
     discord: String,
     base_url: String,
 }
@@ -198,7 +197,6 @@ pub fn generate(args: &Args) -> Result<()> {
     ctx.insert("twitch", &config.twitch);
     ctx.insert("youtube", &config.youtube);
     ctx.insert("discord", &config.discord);
-    ctx.insert("twitter", &config.twitter);
     ctx.insert("dev", "");
 
     #[cfg(feature = "dev")]
